@@ -1,6 +1,6 @@
 # create-petzl
 
-#### Note: 99% of the work in this package was done by @sindresorhus who does amazing things for the JS community. Be sure to check out his work.
+#### Note: 99% of the work in this package was done by [@sindresorhus](https://github.com/sindresorhus) who does amazing things for the JS community. Be sure to check out his work.
 
 > Add [petzl](https://github.com/petzljs/petzl) to your project
 
