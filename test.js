@@ -1,161 +1,164 @@
-import path from 'path';
-import fs from 'fs';
-import test from 'ava';
-import dotProp from 'dot-prop';
-import execa from 'execa';
-import tempWrite from 'temp-write';
-import createAva from '.';
+const path = require("path");
+const fs = require("fs");
+const { it } = require("petzl");
+const dotProp = require("dot-prop");
+const execa = require("execa");
+const tempWrite = require("temp-write");
+const createPetzl = require(".");
+const assert = require("assert");
 
-const {get} = dotProp;
+const { get } = dotProp;
 
 const runWithoutInstall = async (packageJson, additionalOptions) => {
-	const filePath = tempWrite.sync(JSON.stringify(packageJson), 'package.json');
+    const filePath = tempWrite.sync(
+        JSON.stringify(packageJson),
+        "package.json"
+    );
 
-	await createAva({
-		cwd: path.dirname(filePath),
-		skipInstall: true,
-		...additionalOptions
-	});
+    await createPetzl({
+        cwd: path.dirname(filePath),
+        skipInstall: true,
+        ...additionalOptions,
+    });
 
-	return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
 };
 
-test('empty package.json', async t => {
-	t.is(get(await runWithoutInstall({}), 'scripts.test'), 'ava');
+it("empty package.json", async () => {
+    assert.strictEqual(
+        get(await runWithoutInstall({}), "scripts.test"),
+        "petzl"
+    );
 });
 
-test('has scripts', async t => {
-	const pkg = await runWithoutInstall({
-		scripts: {
-			start: ''
-		}
-	});
+it("has scripts", async () => {
+    const pkg = await runWithoutInstall({
+        scripts: {
+            start: "",
+        },
+    });
 
-	t.is(get(pkg, 'scripts.test'), 'ava');
+    assert.strictEqual(get(pkg, "scripts.test"), "petzl");
 });
 
-test('has default test', async t => {
-	const pkg = await runWithoutInstall({
-		scripts: {
-			test: 'echo "Error: no test specified" && exit 1'
-		}
-	});
+it("has default test", async () => {
+    const pkg = await runWithoutInstall({
+        scripts: {
+            test: 'echo "Error: no test specified" && exit 1',
+        },
+    });
 
-	t.is(get(pkg, 'scripts.test'), 'ava');
+    assert.strictEqual(get(pkg, "scripts.test"), "petzl");
 });
 
-test('has only AVA', async t => {
-	const pkg = await runWithoutInstall({
-		scripts: {
-			test: 'ava'
-		}
-	});
+it("has only petzl", async () => {
+    const pkg = await runWithoutInstall({
+        scripts: {
+            test: "petzl",
+        },
+    });
 
-	t.is(get(pkg, 'scripts.test'), 'ava');
+    assert.strictEqual(get(pkg, "scripts.test"), "petzl");
 });
 
-test('has test', async t => {
-	const pkg = await runWithoutInstall({
-		scripts: {
-			test: 'foo'
-		}
-	});
+it("has test", async () => {
+    const pkg = await runWithoutInstall({
+        scripts: {
+            test: "foo",
+        },
+    });
 
-	t.is(get(pkg, 'scripts.test'), 'foo && ava');
+    assert.strictEqual(get(pkg, "scripts.test"), "foo && petzl");
 });
 
-test('has cli args', async t => {
-	const args = ['--foo'];
+it("has cli args", async () => {
+    const args = ["--foo"];
 
-	const pkg = await runWithoutInstall({
-		scripts: {
-			start: ''
-		}
-	}, {args});
+    const pkg = await runWithoutInstall(
+        {
+            scripts: {
+                start: "",
+            },
+        },
+        { args }
+    );
 
-	t.is(get(pkg, 'scripts.test'), 'ava --foo');
+    assert.strictEqual(get(pkg, "scripts.test"), "petzl --foo");
 });
 
-test('has cli args and existing binary', async t => {
-	const args = ['--foo', '--bar'];
+it("has cli args and existing binary", async () => {
+    const args = ["--foo", "--bar"];
 
-	const pkg = await runWithoutInstall({
-		scripts: {
-			test: 'foo'
-		}
-	}, {args});
+    const pkg = await runWithoutInstall(
+        {
+            scripts: {
+                test: "foo",
+            },
+        },
+        { args }
+    );
 
-	t.is(get(pkg, 'scripts.test'), 'foo && ava --foo --bar');
+    assert.strictEqual(get(pkg, "scripts.test"), "foo && petzl --foo --bar");
 });
 
-test('does not remove empty dependency properties', async t => {
-	const pkg = await runWithoutInstall({
-		dependencies: {},
-		devDependencies: {},
-		optionalDependencies: {},
-		peerDependencies: {}
-	});
+it("does not remove empty dependency properties", async () => {
+    const pkg = await runWithoutInstall({
+        dependencies: {},
+        devDependencies: {},
+        optionalDependencies: {},
+        peerDependencies: {},
+    });
 
-	t.truthy(get(pkg, 'dependencies'));
-	t.truthy(get(pkg, 'devDependencies'));
-	t.truthy(get(pkg, 'optionalDependencies'));
-	t.truthy(get(pkg, 'peerDependencies'));
+    assert(get(pkg, "dependencies"));
+    assert(get(pkg, "devDependencies"));
+    assert(get(pkg, "optionalDependencies"));
+    assert(get(pkg, "peerDependencies"));
 });
 
-test.serial('installs the AVA dependency', async t => {
-	const filepath = tempWrite.sync(JSON.stringify({}), 'package.json');
+it("installs the petzl dependency", async () => {
+    const filepath = tempWrite.sync(JSON.stringify({}), "package.json");
 
-	await createAva({cwd: path.dirname(filepath)});
+    await createPetzl({ cwd: path.dirname(filepath) });
 
-	const installed = get(JSON.parse(fs.readFileSync(filepath, 'utf8')), 'devDependencies.ava');
-	t.truthy(installed);
-	t.regex(installed, /^\^/);
+    const installed = get(
+        JSON.parse(fs.readFileSync(filepath, "utf8")),
+        "devDependencies.petzl"
+    );
+    assert(installed);
+    assert.strictEqual(installed.match(/^\^/).length, 1);
 });
 
-test.serial('installs AVA@next', async t => {
-	const filepath = tempWrite.sync(JSON.stringify({}), 'package.json');
+it("installs via yarn if there's a lockfile", async () => {
+    const yarnLock = tempWrite.sync("", "yarn.lock");
 
-	await createAva({cwd: path.dirname(filepath), next: true});
+    await createPetzl({ cwd: path.dirname(yarnLock) });
 
-	const installed = get(JSON.parse(fs.readFileSync(filepath, 'utf8')), 'devDependencies.ava');
-	t.truthy(installed);
-	t.regex(installed, /^\d/);
+    assert.strictEqual(
+        fs.readFileSync(yarnLock, "utf8").match(/^\^/).length,
+        1
+    );
 });
 
-test.serial('installs via yarn if there\'s a lockfile', async t => {
-	const yarnLock = tempWrite.sync('', 'yarn.lock');
+it("invokes via cli", async () => {
+    const cliFilepath = path.resolve(__dirname, "./cli.js");
+    const filepath = tempWrite.sync(JSON.stringify({}), "package.json");
+    await execa(cliFilepath, [], { cwd: path.dirname(filepath) });
 
-	await createAva({cwd: path.dirname(yarnLock)});
-
-	t.regex(fs.readFileSync(yarnLock, 'utf8'), /ava/);
+    assert.strictEqual(
+        get(JSON.parse(fs.readFileSync(filepath, "utf8")), "scripts.test"),
+        "petzl"
+    );
 });
 
-test.serial('installs AVA@next via yarn if there\'s a lockfile', async t => {
-	const filepath = tempWrite.sync(JSON.stringify({}), 'package.json');
-	const yarnLock = path.join(path.dirname(filepath), 'yarn.lock');
-	fs.writeFileSync(yarnLock, '');
+it("interprets cli arguments", async () => {
+    const cliFilepath = path.resolve(__dirname, "./cli.js");
+    const filepath = tempWrite.sync(JSON.stringify({}), "package.json");
+    await execa(cliFilepath, ["--foo", "--bar"], {
+        cwd: path.dirname(filepath),
+    });
 
-	await createAva({cwd: path.dirname(yarnLock), next: true});
-
-	t.regex(fs.readFileSync(yarnLock, 'utf8'), /ava/);
-
-	const installed = get(JSON.parse(fs.readFileSync(filepath, 'utf8')), 'devDependencies.ava');
-	t.truthy(installed);
-	t.regex(installed, /^\d/);
-});
-
-test.serial('invokes via cli', async t => {
-	const cliFilepath = path.resolve(__dirname, './cli.js');
-	const filepath = tempWrite.sync(JSON.stringify({}), 'package.json');
-	await execa(cliFilepath, [], {cwd: path.dirname(filepath)});
-
-	t.is(get(JSON.parse(fs.readFileSync(filepath, 'utf8')), 'scripts.test'), 'ava');
-});
-
-test.serial('interprets cli arguments', async t => {
-	const cliFilepath = path.resolve(__dirname, './cli.js');
-	const filepath = tempWrite.sync(JSON.stringify({}), 'package.json');
-	await execa(cliFilepath, ['--foo', '--bar'], {cwd: path.dirname(filepath)});
-
-	t.is(get(JSON.parse(fs.readFileSync(filepath, 'utf8')), 'scripts.test'), 'ava --foo --bar');
+    assert.strictEqual(
+        get(JSON.parse(fs.readFileSync(filepath, "utf8")), "scripts.test"),
+        "petzl --foo --bar"
+    );
 });

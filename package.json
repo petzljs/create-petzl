@@ -1,50 +1,46 @@
 {
-	"name": "create-ava",
-	"version": "2.0.1",
-	"description": "Add AVA to your project",
-	"license": "MIT",
-	"repository": "avajs/create-ava",
-	"author": {
-		"name": "Sindre Sorhus",
-		"email": "sindresorhus@gmail.com",
-		"url": "sindresorhus.com"
-	},
-	"engines": {
-		"node": ">=8.9.4 <9 || >=10.0.0 <11 || >=12.0.0"
-	},
-	"scripts": {
-		"test": "xo && ava"
-	},
-	"bin": "cli.js",
-	"files": [
-		"index.js",
-		"cli.js"
-	],
-	"keywords": [
-		"init",
-		"initialize",
-		"add",
-		"create",
-		"setup",
-		"generate",
-		"generator",
-		"scaffold",
-		"ava",
-		"test",
-		"runner"
-	],
-	"dependencies": {
-		"arr-exclude": "^1.0.0",
-		"execa": "^0.7.0",
-		"has-yarn": "^2.1.0",
-		"read-pkg-up": "^6.0.0",
-		"write-pkg": "^4.0.0"
-	},
-	"devDependencies": {
-		"ava": "^2.4.0",
-		"dot-prop": "^5.1.0",
-		"temp-write": "^4.0.0",
-		"xo": "^0.25.3",
-		"yarn": "^1.5.1"
-	}
+    "name": "create-petzl",
+    "version": "2.0.1",
+    "description": "Add petzl to your project",
+    "license": "MIT",
+    "repository": "petzljs/create-petzl",
+    "engines": {
+        "node": ">=8.9.4 <9 || >=10.0.0 <11 || >=12.0.0"
+    },
+    "scripts": {
+        "test": "petzl"
+    },
+    "bin": {
+        "create-petzl": "cli.js"
+    },
+    "files": [
+        "index.js",
+        "cli.js"
+    ],
+    "keywords": [
+        "init",
+        "initialize",
+        "add",
+        "create",
+        "setup",
+        "generate",
+        "generator",
+        "scaffold",
+        "petzl",
+        "test",
+        "runner"
+    ],
+    "dependencies": {
+        "arr-exclude": "^1.0.0",
+        "execa": "^0.7.0",
+        "has-yarn": "^2.1.0",
+        "read-pkg-up": "^6.0.0",
+        "write-pkg": "^4.0.0"
+    },
+    "devDependencies": {
+        "dot-prop": "^5.1.0",
+        "petzl": "^1.1.0",
+        "temp-write": "^4.0.0",
+        "yarn": "^1.5.1"
+    }
 }
