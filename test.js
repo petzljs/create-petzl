@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs");
-const { it } = require("petzl");
+const { it } = require("quyz");
 const dotProp = require("dot-prop");
 const execa = require("execa");
 const tempWrite = require("temp-write");
@@ -27,7 +27,7 @@ const runWithoutInstall = async (packageJson, additionalOptions) => {
 it("empty package.json", async () => {
     assert.strictEqual(
         get(await runWithoutInstall({}), "scripts.test"),
-        "petzl"
+        "quyz"
     );
 });
 
@@ -38,7 +38,7 @@ it("has scripts", async () => {
         },
     });
 
-    assert.strictEqual(get(pkg, "scripts.test"), "petzl");
+    assert.strictEqual(get(pkg, "scripts.test"), "quyz");
 });
 
 it("has default test", async () => {
@@ -48,17 +48,17 @@ it("has default test", async () => {
         },
     });
 
-    assert.strictEqual(get(pkg, "scripts.test"), "petzl");
+    assert.strictEqual(get(pkg, "scripts.test"), "quyz");
 });
 
-it("has only petzl", async () => {
+it("has only quyz", async () => {
     const pkg = await runWithoutInstall({
         scripts: {
-            test: "petzl",
+            test: "quyz",
         },
     });
 
-    assert.strictEqual(get(pkg, "scripts.test"), "petzl");
+    assert.strictEqual(get(pkg, "scripts.test"), "quyz");
 });
 
 it("has test", async () => {
@@ -68,7 +68,7 @@ it("has test", async () => {
         },
     });
 
-    assert.strictEqual(get(pkg, "scripts.test"), "foo && petzl");
+    assert.strictEqual(get(pkg, "scripts.test"), "foo && quyz");
 });
 
 it("has cli args", async () => {
@@ -83,7 +83,7 @@ it("has cli args", async () => {
         { args }
     );
 
-    assert.strictEqual(get(pkg, "scripts.test"), "petzl --foo");
+    assert.strictEqual(get(pkg, "scripts.test"), "quyz --foo");
 });
 
 it("has cli args and existing binary", async () => {
@@ -98,7 +98,7 @@ it("has cli args and existing binary", async () => {
         { args }
     );
 
-    assert.strictEqual(get(pkg, "scripts.test"), "foo && petzl --foo --bar");
+    assert.strictEqual(get(pkg, "scripts.test"), "foo && quyz --foo --bar");
 });
 
 it("does not remove empty dependency properties", async () => {

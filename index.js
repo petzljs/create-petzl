@@ -19,7 +19,7 @@ module.exports = async (options = {}) => {
         path.resolve(options.cwd || process.cwd(), "package.json");
     const packageCwd = path.dirname(packagePath);
     const args = options.args || [];
-    const cmd = "petzl" + (args.length > 0 ? " " + args.join(" ") : "");
+    const cmd = "quyz" + (args.length > 0 ? " " + args.join(" ") : "");
 
     packageJson.scripts = packageJson.scripts ? packageJson.scripts : {};
 
@@ -27,7 +27,7 @@ module.exports = async (options = {}) => {
     if (s.test && s.test !== DEFAULT_TEST_SCRIPT) {
         s.test = s.test.replace(/\bnode (test\/)?test\.js\b/, cmd);
 
-        if (!/\bpetzl\b/.test(s.test)) {
+        if (!/\bquyz\b/.test(s.test)) {
             s.test += ` && ${cmd}`;
         }
     } else {
@@ -40,15 +40,14 @@ module.exports = async (options = {}) => {
         return;
     }
 
-    const petzlTag = "petzl";
+    const quyzTag = "quyz";
 
     if (hasYarn(packageCwd)) {
         const yarnArguments = [
             "add",
-            petzlTag,
+            quyzTag,
             "--dev",
-            "--ignore-workspace-root-check",
-            petzlTag,
+            "--ignore-workspace-root-check"
         ];
 
         try {
@@ -70,7 +69,7 @@ module.exports = async (options = {}) => {
         return;
     }
 
-    const npmArguments = ["install", "--save-dev", petzlTag];
+    const npmArguments = ["install", "--save-dev", quyzTag];
 
     await execa("npm", npmArguments, {
         cwd: packageCwd,

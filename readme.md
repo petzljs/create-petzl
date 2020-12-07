@@ -1,32 +1,32 @@
-# create-petzl
+# create-quyz
 
 #### Note: 99% of the work in this package was done by [@sindresorhus](https://github.com/sindresorhus) who does amazing things for the JS community. Be sure to check out his work.
 
-> Add [petzl](https://github.com/petzljs/petzl) to your project
+> Add [quyz](https://github.com/quyz-js/quyz) to your project
 
 ## CLI
 
 ```
-$ npm init petzl [options]
+$ npm init quyz [options]
 ```
 
 ## API
 
 ```
-$ npm install create-petzl
+$ npm install create-quyz
 ```
 
 ### Usage
 
 ```js
-const createPetzl = require("create-petzl");
+const createPetzl = require("create-quyz");
 
 (async () => {
-    await createPetzl();
+    await createQuyz();
 })();
 ```
 
-### createPetzl(options?)
+### createQuyz(options?)
 
 Returns a `Promise`.
 
@@ -52,7 +52,7 @@ For instance, with the arguments `['--foo', '--bar']`, the following will be put
 {
     "name": "awesome-package",
     "scripts": {
-        "test": "petzl --foo --bar"
+        "test": "quyz --foo --bar"
     }
 }
 ```
